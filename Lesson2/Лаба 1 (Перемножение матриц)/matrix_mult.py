@@ -5,71 +5,82 @@ parser = argparse.ArgumentParser(
                     description='What the program does',
                     epilog='Text at the bottom of help')
 
-parser.add_argument('-I', type=str, required=True)  # "Lesson2/Лаба 1 (Перемножение матриц)/matrix.txt"
-parser.add_argument('-O', type=str, required=True)  # "Lesson2/Лаба 1 (Перемножение матриц)/mult.txt"
+# python3 "Lesson2/Лаба 1 (Перемножение матриц)/matrix_mult.py" -I "Lesson2/Лаба 1 (Перемножение матриц)/matrix.txt" -O "Lesson2/Лаба 1 (Перемножение матриц)/result.txt"
+parser.add_argument('-I', type=str, required=True)
+parser.add_argument('-O', type=str, required=True)
 
-print("Work in progress!!1")
-# Игра Among Us («Амонг Ас») — это одно из главных событий в мире компьютерных развлечений за 2020 год. 
-# Суть данной мультиплеерной игры, вдохновленной небезызвестной «Мафией», состоит в том, что несколько игроков, 
-# заточенных на космическом корабле в роли космонавтов, должны выяснить, кто из них предатель. 
-# Задача обычных космонавтов — бродить по отсекам судна и выполнять различные ремонтные работы, 
-# тогда как задача одного или нескольких предателей — эти самые ремонтные работы саботировать, 
-# перебив как можно больше членов бригады, не попадаясь на глаза случайным свидетелям. 
-# Ниже вы найдете не только фанатский однопользовательский порт Among Us, 
-# но и множество других игр, выдержанных в том же сеттинге.
+
+
+# Ищет и парсит матрицы в заданном файле в формате чисел,
+# разделённых пробелами, разделённые пустыми строками ('\n'),
+# от начала файла. Возвращает их как список списков списков.
+def parse_matrices(input_path):
+    matrices = []
+    curr_matrix = []
+
+    with open(input_path, 'r') as f_input:
+        for input_line in f_input:
+            if input_line == '\n':
+                matrices.append(curr_matrix)
+                curr_matrix = []
+            else:
+                curr_line = []
+                for input_num in input_line.rstrip().split(' '):
+                    curr_line.append(int(input_num))
+                curr_matrix.append(curr_line)
+    matrices.append(curr_matrix)
+
+    return matrices
+
+# Проверка матриц на корректность размерностей (по условию),
+# возвращает True (можно перемножить) или False (нельзя перемножить).
+# Предполагается, что обе матрицы заданы корректно!
+def compare_matrices_dimensions(matrix1, matrix2):
+    return (len(matrix1) == len(matrix2[0])) == (len(matrix1[0]) == len(matrix2))
+
+# Выполняет перемножение двух переданных матриц, после чего
+# возвращает результат вычислений как список списков.
+# Предполагается, что обе матрицы заданы корректно!
+def multiply_matrices(matrix1, matrix2):
+    result = []
+
+    for i in range(len(matrix1)):
+        result.append([])
+        for j in range(len(matrix2[0])):
+            result[i].append(0)
+            for k in range(len(matrix2)):
+                result[i][j] += matrix1[i][k] * matrix2[k][j]
+
+    return result
+
+# Выводит 1 матрицу в формате чисел, разделённых пробелами,
+# разделяя их пустой строкой ('\n'), в указанный файл.
+# Ничего не возвращает.
+def output_matrices(output_path, matrices):
+    f_output = open(output_path, 'w')
+
+    for matrix in matrices:
+        for i in range(len(matrix)):
+            curr_str = ''
+            for j in range(len(matrix[i])):
+                if (curr_str != ''):
+                    curr_str += ' '
+                curr_str += str(matrix[i][j])
+            f_output.writelines(curr_str + '\n')
+        f_output.writelines('\n')
+
+
 def init():
     args = parser.parse_args()
     input_path = args.I
     output_path = args.O
 
-    [matrix1, matrix2] = parseMatrices(input_path, 2)
-    compareMatricesDimensions(matrix1, matrix2)
+    [matrix1, matrix2] = parse_matrices(input_path)
+    if compare_matrices_dimensions(matrix1, matrix2):
+        matrixR = multiply_matrices(matrix1, matrix2)
+        output_matrices(output_path, [matrixR])
+        print('Матрицы успешно перемножены! Результат сохранён в указанный файл.')
+    else:
+        print('Эти матрицы нельзя перемножить.')
 
-    matrixRes = []
-    multiplyMatrices(matrix1, matrix2, matrixRes)
-    outputMatrices(output_path, 1, [matrixR])
-
-
-
-with open(args.I, 'r') as f_input:
-    currMatrix = 1  # в какую матрицу читаем данные
-
-    for input_line in f_input:
-
-        # матрица окончена, переход к следующей матрице
-        if input_line == '\n':
-            currMatrix = 2
-            continue
-
-        if currMatrix == 1:
-            matrix1.append(input_line.rstrip().split(' '))
-        else:
-            matrix2.append(input_line.rstrip().split(' '))
-
-print(matrix1)
-print(matrix2)
-
-
-
-
-
-# # Лабораторные работы
-# **Важно помнить:** 
-# * **весь код оформляется в соответствии с PEP8.**
-# * **код разбивается на функции (вне функций только импорты и вызов основной функции)**
-# * **функции документируются**
-# * **необходимо проверять размер матриц на корректность размерности**
-
-# ### Лабораторная работа 2.1. Перемножение матриц
-# Реализовать скрипт matrix_mult.py
-
-# Входные параметры скрипта:
-# 1. Путь к файлу с матрицами. Например, matrix.txt. Внутри файла заданы две целочисленные матрицы.
-# 2. Путь к файлу с результатом работы программы
-# Выходные значения: записывает результирующую матрицу в файл с результатом работы программы  
-
-# Что должен делать скрипт:   
-# 1) Прочитать файл, используя встроенные функции Python для работы с файлами.  
-# 2) Преобразовать прочитанные строки в матрицы. Матрицы реализовать используя стандартные типы данных Python. Например, список списков.  
-# 3) Найти произведение полученных матриц.  
-# 4) Записать результат произведения в выходной файл.  
+init()

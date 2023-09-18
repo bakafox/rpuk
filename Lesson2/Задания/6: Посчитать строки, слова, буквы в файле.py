@@ -1,6 +1,6 @@
 filepath = input('Введите путь до файла (пропуск - исп. образец): ')
 if filepath == '':
-    filepath = 'Lesson2/Задания/6. sample.txt'
+    filepath = 'Lesson2/Задания/6: sample.txt'
 
 lines = words = letters = 0
 

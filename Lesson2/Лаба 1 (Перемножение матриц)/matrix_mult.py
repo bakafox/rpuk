@@ -4,16 +4,16 @@ parser = argparse.ArgumentParser(
                     prog='ProgramName',
                     description='What the program does',
                     epilog='Text at the bottom of help')
-
 # python3 "Lesson2/Лаба 1 (Перемножение матриц)/matrix_mult.py" -I "Lesson2/Лаба 1 (Перемножение матриц)/matrix.txt" -O "Lesson2/Лаба 1 (Перемножение матриц)/result.txt"
 parser.add_argument('-I', type=str, required=True)
 parser.add_argument('-O', type=str, required=True)
 
 
-
-# Ищет и парсит матрицы в заданном файле в формате чисел,
-# разделённых пробелами, разделённые пустыми строками ('\n'),
-# от начала файла. Возвращает их как список списков списков.
+"""
+Ищет и парсит матрицы в заданном файле в формате чисел,
+разделённых пробелами, разделённые пустыми строками ('\n'),
+от начала файла. Возвращает их как список списков списков.
+"""
 def parse_matrices(input_path):
     matrices = []
     curr_matrix = []
@@ -32,15 +32,22 @@ def parse_matrices(input_path):
 
     return matrices
 
-# Проверка матриц на корректность размерностей (по условию),
-# возвращает True (можно перемножить) или False (нельзя перемножить).
-# Предполагается, что обе матрицы заданы корректно!
-def compare_matrices_dimensions(matrix1, matrix2):
-    return (len(matrix1) == len(matrix2[0])) == (len(matrix1[0]) == len(matrix2))
 
-# Выполняет перемножение двух переданных матриц, после чего
-# возвращает результат вычислений как список списков.
-# Предполагается, что обе матрицы заданы корректно!
+"""
+Проверка матриц на корректность размерностей (по условию),
+возвращает True (можно перемножить) или False (нельзя перемножить).
+Предполагается, что обе матрицы заданы корректно!
+"""
+def compare_matrices_dimensions(matrix1, matrix2):
+    return ((len(matrix1) == len(matrix2[0]))
+            and (len(matrix1[0]) == len(matrix2)))
+
+
+"""
+Выполняет перемножение двух переданных матриц, после чего
+возвращает результат вычислений как список списков.
+Предполагается, что обе матрицы заданы корректно!
+"""
 def multiply_matrices(matrix1, matrix2):
     result = []
 
@@ -53,9 +60,12 @@ def multiply_matrices(matrix1, matrix2):
 
     return result
 
-# Выводит 1 матрицу в формате чисел, разделённых пробелами,
-# разделяя их пустой строкой ('\n'), в указанный файл.
-# Ничего не возвращает.
+
+"""
+Выводит 1 матрицу в формате чисел, разделённых пробелами,
+разделяя их пустой строкой ('\n'), в указанный файл.
+Ничего не возвращает.
+"""
 def output_matrices(output_path, matrices):
     f_output = open(output_path, 'w')
 
@@ -79,8 +89,9 @@ def init():
     if compare_matrices_dimensions(matrix1, matrix2):
         matrixR = multiply_matrices(matrix1, matrix2)
         output_matrices(output_path, [matrixR])
-        print('Матрицы успешно перемножены! Результат сохранён в указанный файл.')
+        print('Матрицы успешно перемножены! Результат сохранён в файл.')
     else:
         print('Эти матрицы нельзя перемножить.')
+
 
 init()

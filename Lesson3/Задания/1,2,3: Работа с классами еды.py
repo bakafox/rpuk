@@ -67,7 +67,6 @@ class Item:
         return self._count == num
 
 
-
 class Fruit(Item):
     def __init__(self, ripe=True, **kwargs):
         super().__init__(**kwargs)
@@ -81,7 +80,6 @@ class Food(Item):
     @property
     def eatable(self):
         return self._saturation > 0
-
 
 
 class Brick(Item):

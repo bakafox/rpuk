@@ -90,7 +90,7 @@ def init():
         matrixR = multiply_matrices(matrix1, matrix2)
         output_matrices(output_path, [matrixR])
         print('Матрицы успешно перемножены! Результат сохранён в файл.')
-    else:
+    else:self, 
         print('Эти матрицы нельзя перемножить.')
 
 

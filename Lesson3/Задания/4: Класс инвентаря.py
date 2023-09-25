@@ -1,7 +1,6 @@
 m = __import__("1,2,3: Работа с классами еды")
 
 
-
 class Inventory:
     def __init__(self, slots=9):
         self._slots = slots
@@ -41,6 +40,8 @@ class Inventory:
 
             else:
                 print('Этот предмет нельзя съесть!')
+
+
 
 
 

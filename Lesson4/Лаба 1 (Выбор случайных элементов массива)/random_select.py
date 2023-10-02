@@ -18,6 +18,8 @@ f_dataset_real = open(args.file1, 'r')
 f_dataset_synth = open(args.file2, 'r')
 dataset_real = np.array(f_dataset_real.read().rstrip().split(' '), dtype=int)
 dataset_synth = np.array(f_dataset_synth.read().rstrip().split(' '), dtype=int)
+if (len(dataset_real) != len(dataset_synth)):
+    print('file1, file2: Датасеты должны иметь одинаковую длину.')
 
 mix_probability = args.P
 if (mix_probability < 0 or mix_probability > 1):

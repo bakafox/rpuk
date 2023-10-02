@@ -4,7 +4,7 @@ parser = argparse.ArgumentParser(
                     prog='ProgramName',
                     description='What the program does',
                     epilog='Text at the bottom of help')
-# python3 "Lesson2/Лаба 1 (Перемножение матриц)/matrix_mult.py" -I "Lesson2/Лаба 1 (Перемножение матриц)/matrix.txt" -O "Lesson2/Лаба 1 (Перемножение матриц)/result.txt"
+# python3 'matrix_mult.py' -I 'matrix.txt' -O 'result.txt'
 parser.add_argument('-I', type=str, required=True)
 parser.add_argument('-O', type=str, required=True)
 
@@ -90,7 +90,7 @@ def init():
         matrixR = multiply_matrices(matrix1, matrix2)
         output_matrices(output_path, [matrixR])
         print('Матрицы успешно перемножены! Результат сохранён в файл.')
-    else:self, 
+    else:
         print('Эти матрицы нельзя перемножить.')
 
 

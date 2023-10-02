@@ -3,7 +3,7 @@ import numpy as np
 
 image_path = input('Введите путь изображения (пропуск - BEER.bmp): ')
 if image_path == '':
-    image_path = 'rpuk/Lesson4/Задания/2: BEER.bmp'
+    image_path = 'rpuk/Lesson4 (numpy)/Задания/2: BEER.bmp'
 
 image = Image.open(image_path)
 colors = np.array(image.getdata())

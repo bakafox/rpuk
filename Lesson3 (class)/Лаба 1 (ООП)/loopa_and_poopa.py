@@ -88,23 +88,23 @@ a = Accountant()
 a.give_salary('fd')
 
 print()
-l.do_work('Lesson3/Лаба 1 (ООП)/matrices1.txt',
-          'Lesson3/Лаба 1 (ООП)/result_l1.txt')
+l.do_work('rpuk/Lesson3 (class)/Лаба 1 (ООП)/matrices1.txt',
+          'rpuk/Lesson3 (class)/Лаба 1 (ООП)/result_l1.txt')
 l.take_salary(a.give_salary(l))
 print(f'Денег у Лупы: {l.get_deneg()}, денег у Пупы: {p.get_deneg()}')
 
 print()
-p.do_work('Lesson3/Лаба 1 (ООП)/matrices1.txt',
-          'Lesson3/Лаба 1 (ООП)/result_p1.txt')
+p.do_work('rpuk/Lesson3 (class)/Лаба 1 (ООП)/matrices1.txt',
+          'rpuk/Lesson3 (class)/Лаба 1 (ООП)/result_p1.txt')
 p.take_salary(a.give_salary(p))
 print(f'Денег у Лупы: {l.get_deneg()}, денег у Пупы: {p.get_deneg()}')
 
 print()
-l.do_work('Lesson3/Лаба 1 (ООП)/matrices2.txt',
-          'Lesson3/Лаба 1 (ООП)/result_l2.txt')
+l.do_work('rpuk/Lesson3 (class)/Лаба 1 (ООП)/matrices2.txt',
+          'rpuk/Lesson3 (class)/Лаба 1 (ООП)/result_l2.txt')
 print()
-p.do_work('Lesson3/Лаба 1 (ООП)/matrices2.txt',
-          'Lesson3/Лаба 1 (ООП)/result_p2.txt')
+p.do_work('rpuk/Lesson3 (class)/Лаба 1 (ООП)/matrices2.txt',
+          'rpuk/Lesson3 (class)/Лаба 1 (ООП)/result_p2.txt')
 
 print("\nAnd now, the moment we all've been waiting for:")
 print(f'Денег у Лупы: {l.get_deneg()}, денег у Пупы: {p.get_deneg()}')

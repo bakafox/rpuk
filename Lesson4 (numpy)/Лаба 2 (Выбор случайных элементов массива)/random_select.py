@@ -27,15 +27,8 @@ if (mix_probability < 0 or mix_probability > 1):
 
 
 """
-Генерируем случайный список булевых значений для смешения
-датасетов, учитывая при этом вероятность смешения P
-(True -- синтетические данные, False -- реальные).
+Применияем метод where для выбора элементов,
+основываясь на удовлетворении условия, что вероятность
+смешения меньше очередного случайного числа из списка
 """
-mix_indices = (mix_probability >= np.random.rand(len(dataset_real)))
-
-"""
-Наконец, создаём смешанный датасет и выводим его на экран.
-"""
-dataset_mixed = dataset_real.copy()
-dataset_mixed[mix_indices] = dataset_synth[mix_indices]
-print(dataset_mixed)
+print(np.where(mix_probability < np.random.rand(len(dataset_real)), dataset_real, dataset_synth))

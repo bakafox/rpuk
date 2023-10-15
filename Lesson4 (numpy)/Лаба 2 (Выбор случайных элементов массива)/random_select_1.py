@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('file1', type=str)
 parser.add_argument('file2', type=str)
 parser.add_argument('P', type=float)
-# python3 random_select.py 'file_1.txt' 'file_2.txt' 0.2
+# python3 random_select_1.py 'file_1.txt' 'file_2.txt' 0.2
 args = parser.parse_args()
 
 f_dataset_real = open(args.file1, 'r')

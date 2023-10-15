@@ -27,14 +27,16 @@ if (mix_probability < 0 or mix_probability > 1):
 
 
 """
-Фукнция для смешения датасета 1 с датасетом 2 с вероятностью prob.
-Использует метод random.choice для случайного выбора элементов
-и умножение на 0 (удаляет элемент) или 1 (оставляет элемент).
+Фукнция для выбора одного из двух элементов с вероятностью prob,
+Использует метод random.choice для выбора с вероятностью.
+Поэлементно применяется к np.array посредством метода vectorize.
 """
-def mix_datasets(set_1, set_2, prob):
-    arr_bool = np.random.choice([0, 1], len(set_1), p=[prob, 1-prob])
-    set_mixed = set_1*arr_bool + set_2*(1-arr_bool)
-    return set_mixed
+def choose_elm_with_prob(elm_1, elm_2, prob):
+    if np.random.choice([0, 1], p=[prob, 1-prob]):
+        return elm_1
+    else:
+        return elm_2
 
+mix_datasets = np.vectorize(choose_elm_with_prob)
 dataset_mixed = mix_datasets(dataset_real, dataset_synth, mix_probability)
 print(dataset_mixed)

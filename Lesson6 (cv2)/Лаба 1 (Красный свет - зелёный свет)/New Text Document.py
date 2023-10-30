@@ -39,13 +39,26 @@ while True:
         frame = cv2.adaptiveThreshold( # doing things the easy way
             cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), 255,
             cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
-            15, 5
+            15, 3
         )
         frame_diff = cv2.absdiff(frame, prev_frame)
-        is_moving = (cv2.countNonZero(frame_diff) / frame_diff.size) > 0.007
+        is_moving = (cv2.countNonZero(frame_diff) / frame_diff.size) > 0.01
         prev_frame = frame
 
-        decorated_frame = get_decorated_frame(frame_raw, is_redlight, is_moving)
+        if is_redlight and is_moving:
+            frame_raw_controus = cv2.drawContours(
+                frame_raw,
+                cv2.findContours(
+                    frame_diff,
+                    cv2.RETR_TREE,
+                    cv2.CHAIN_APPROX_SIMPLE
+                )[0],
+                -1, (0, 0, 155), 5
+            )
+            decorated_frame = get_decorated_frame(frame_raw_controus, is_redlight, is_moving)
+        else:
+            decorated_frame = get_decorated_frame(frame_raw, is_redlight, is_moving)
+
         cv2.imshow('KAMEPA', decorated_frame)
 
 

@@ -40,9 +40,6 @@ average_digits = [] # будет весами для каждой цифры
 for i in range(10):
     filtered_data = [x[0] for x in train if np.argmax(x[1]) == i]
     average_digit = np.average(np.asarray(filtered_data), axis=0)
-    #img = np.reshape(average_digit, (28, 28))
-    #plt.imshow(img)
-    #plt.show()
     average_digits.append(average_digit)
 
 
@@ -54,43 +51,30 @@ def get_weight_prediction(sample, weight, offset):
     return 1.0/(1.0 + np.exp(-( # сигмоидная функция (ограничение результата в диапазоне 0..1)
         np.dot(weight, sample) + offset # скалярное произведение + смещение
     )))
-#x_2 = train[2][0] # 4-ка
-#x_17 = train[17][0] # 8-ка
-#W = np.transpose(average_digits[7])
-#print(get_weight_prediction(x_2, W, -30))
-#print(get_weight_prediction(x_17, W, -30))
 
 def predict(sample, weights, offset): # простая сеть из 10 входных и 1 выходного нейрона
     predictions = []
     for j in range(10):
         predictions.append(
-            get_weight_prediction(
-                sample,
-                np.transpose(weights[j]),
-                offset
-        )[0][0])
-    
+            get_weight_prediction(sample, np.transpose(weights[j]), offset)[0][0]
+        )
     return encode_label(np.argmax(predictions))
-#print(predict(x_2, average_digits, -30))
-#print(predict(x_17, average_digits, -30))
 
 
 """
 3. Рассчитать точность получившейся модели на тестовом наборе.
 """
 def get_accuracy(data, weights, offset):
-    correct = 0
+    correct_predictions = 0
 
     for i in range(len(data)):
         sample, label = data[i]
         prediction = predict(sample, weights, offset)
 
         if np.argmax(prediction) == np.argmax(label):
-            correct += 1
-        #else:
-            #print(prediction, np.argmax(label))
+            correct_predictions += 1
 
-    return np.round(((correct
+    return np.round(((correct_predictions
                      / len(data)) * 100), 2)
 
 print('Точность на тренировочном датасете:',
@@ -105,8 +89,40 @@ print('Точность на тестовом датасете:',
 каждое изображение перевести в вектор размера (784),
 визуализировать полученные вектора с помощью t-SNE.
 """
+sample_digits = []
+for i in range(10):
+    sample_digits.append([])
 
-# work in progress! полурабочий код в коммит не включён.
+for j in range(len(train)):
+    sample, label = train[j]
+    if (len(sample_digits[np.argmax(label)])) < 30:
+        sample_digits[np.argmax(label)].append((np.reshape(sample, (784, 1)), label))
+
+    for k in sample_digits:  # проверка на заполнение
+        if len(k) == 30:
+            break
+
+# преобразуем в непрерынвый список изображений для вывода
+sample_digits_prepared = []
+for k in sample_digits:
+    digits_class, labels_class = zip(*k)
+    digits_class = np.concatenate(digits_class, axis=1)
+    sample_digits_prepared.append(digits_class)
+
+sample_digits_prepared = np.concatenate(sample_digits_prepared, axis=1)
+
+tsne = TSNE(n_components=2)
+tsne_scaled = tsne.fit_transform(np.transpose(sample_digits_prepared))
+
+plt.figure(figsize=(6, 6))
+for i in range(10):
+    plt.scatter(tsne_scaled[i*30 : (i+1)*30, 0],
+                tsne_scaled[i*30 : (i+1)*30, 1],
+                label=i)
+
+plt.legend()
+plt.show()
+
 
 """
 5. Визуализировать результаты работы вашей модели
@@ -114,5 +130,29 @@ print('Точность на тестовом датасете:',
 изображения через вашу модель, получившиеся вектора
 размера (10) визуализировать с помощью t-SNE.
 """
+sample_embeds = []
+for i in range(10):
+    sample_embeds.append([])
 
-# пока не успеваю, через часик отправлю коммит с визуализациями :)
+for i in range(10):
+    for j in range(30):
+        sample, label = sample_digits[i][j]
+        prediction = predict(sample, average_digits, -90)
+        sample_embeds[i].append(prediction)
+
+embedding_array_model = np.array(sample_embeds).reshape(-1, 10)
+
+tsne_model = TSNE(n_components=2)
+tsne_result_embeddings_model = tsne_model.fit_transform(embedding_array_model)
+
+# к сожалению, не очень понимаю, как представить точки именно
+# как на графике. это самое близкое, что у меня получилось.
+plt.figure(figsize=(6, 6))
+for i in range(10):
+    # используем randint, чтобы точки не накладывались друг на друга при отображении
+    plt.scatter(tsne_result_embeddings_model[i*30 : (i+1)*30, 0] + np.random.randint(-15, +15),
+                tsne_result_embeddings_model[i*30 : (i+1)*30, 1] + np.random.randint(-15, +15),
+                label=str(i))
+
+plt.legend()
+plt.show()

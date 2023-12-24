@@ -8,6 +8,7 @@ transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize((0.5,), (0.5,))])
 
+
 train_raw = torchvision.datasets.MNIST(
     root="./MNIST/train", train=True,
     transform=torchvision.transforms.ToTensor(), download=True)
@@ -77,9 +78,9 @@ def get_accuracy(data, weights, offset):
     return np.round(((correct_predictions
                      / len(data)) * 100), 2)
 
-print('Точность на тренировочном датасете:',
+print('\nТочность на тренировочном датасете:',
       get_accuracy(train, average_digits, -90), '%')
-print('Точность на тестовом датасете:',
+print('\nТочность на тестовом датасете:',
       get_accuracy(test, average_digits, -90), '%')
 
 
@@ -98,7 +99,7 @@ for j in range(len(train)):
     if (len(sample_digits[np.argmax(label)])) < 30:
         sample_digits[np.argmax(label)].append((np.reshape(sample, (784, 1)), label))
 
-    for k in sample_digits:  # проверка на заполнение
+    for k in sample_digits: # проверка на заполнение
         if len(k) == 30:
             break
 
@@ -119,7 +120,6 @@ for i in range(10):
     plt.scatter(tsne_scaled[i*30 : (i+1)*30, 0],
                 tsne_scaled[i*30 : (i+1)*30, 1],
                 label=i)
-
 plt.legend()
 plt.show()
 
@@ -145,14 +145,12 @@ embedding_array_model = np.array(sample_embeds).reshape(-1, 10)
 tsne_model = TSNE(n_components=2)
 tsne_result_embeddings_model = tsne_model.fit_transform(embedding_array_model)
 
-# к сожалению, не очень понимаю, как представить точки именно
-# как на графике. это самое близкое, что у меня получилось.
 plt.figure(figsize=(6, 6))
 for i in range(10):
-    # используем randint, чтобы точки не накладывались друг на друга при отображении
-    plt.scatter(tsne_result_embeddings_model[i*30 : (i+1)*30, 0] + np.random.randint(-15, +15),
-                tsne_result_embeddings_model[i*30 : (i+1)*30, 1] + np.random.randint(-15, +15),
+    # слегка рандомизиаруем координаты, чтобы точки реже накладывались друг на друга
+    random_offsets = np.random.randint(-30, 30, size=(30, 2))
+    plt.scatter(tsne_result_embeddings_model[i*30 : (i+1)*30, 0] + random_offsets[:, 0],
+                tsne_result_embeddings_model[i*30 : (i+1)*30, 1] + random_offsets[:, 1],
                 label=str(i))
-
 plt.legend()
 plt.show()

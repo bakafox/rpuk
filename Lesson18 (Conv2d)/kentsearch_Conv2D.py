@@ -8,10 +8,10 @@ import torch.nn.functional as F
 Задание: Найти динозавра
 """
 img_paths = [
-    'rpuk/Lesson18 (ResNet50)/A_B_C.jpg',
-    'rpuk/Lesson18 (ResNet50)/Ab_C.jpg',
-    'rpuk/Lesson18 (ResNet50)/abc.jpg',
-    'rpuk/Lesson18 (ResNet50)/abc.png'
+    'rpuk/Lesson18 (Conv2d)/A_B_C.jpg',
+    'rpuk/Lesson18 (Conv2d)/Ab_C.jpg',
+    'rpuk/Lesson18 (Conv2d)/abc.jpg',
+    'rpuk/Lesson18 (Conv2d)/abc.png'
 ]
 
 imgs = []
@@ -73,6 +73,7 @@ while(True):
     with torch.no_grad():
         img_output = model(img_input)
     img_features = layer4_features
+    img_features = F.normalize(img_features, p=1.0, dim=1) # p=2+ даёт более "разбросанные" нормализованные результаты,
 
     """
     3) Закодировать динозавра с соседнего изображения (использовать output с layer4)
@@ -82,6 +83,7 @@ while(True):
     with torch.no_grad():
         kent_output = model(kent_input)
     kent_features = layer4_features
+    kent_features = F.normalize(kent_features, p=1.0, dim=1) # и, например, кент на пик3 начинает распознаваться хуже.
 
 
     """

@@ -9,9 +9,10 @@ import numpy as np
 # получаем рабочую директорию
 working_dir = str(Path(__file__).resolve().parent)
 
-OBJ_THRESH = 0.35 # 0.70
-NMS_THRESH = 0.45 # 0.70
-IMG_SIZE = (128, 96)  # (width, height), such as (1280, 736) | orig: (640, 640)
+OBJ_THRESH = 0.40 # 0.70
+NMS_THRESH = 0.50 # 0.70
+IMG_SIZE = (320, 240)  # (width, height), such as (1280, 736) | orig: (640, 640)
+
 
 CLASSES = ("person", "bicycle", "car","motorbike ","aeroplane ","bus ","train","truck ","boat","traffic light",
            "fire hydrant","stop sign ","parking meter","bench","bird","cat","dog ","horse ","sheep","cow","elephant",
@@ -110,8 +111,10 @@ def post_process(input_data, anchors):
         classes_conf.append(input_data[i][:,5:,:,:])
 
     boxes = [v.transpose(0,2,3,1).reshape(-1, v.shape[1]) for v in boxes]
-    classes_conf = [v.permute(0,2,3,1).reshape(-1, v.shape[1]) for v in classes_conf]
-    scores = [v.permute(0,2,3,1).reshape(-1, v.shape[1]) for v in scores]
+    #classes_conf = [v.permute(0,2,3,1).reshape(-1, v.shape[1]) for v in classes_conf]
+    classes_conf = [v.transpose(1,3).reshape(-1, v.shape[1]) for v in classes_conf]
+    #scores = [v.permute(0,2,3,1).reshape(-1, v.shape[1]) for v in scores]
+    scores = [v.transpose(1,3).reshape(-1, v.shape[1]) for v in scores]
 
     boxes = np.concatenate(boxes)
     classes_conf = np.concatenate(classes_conf)
@@ -163,12 +166,19 @@ def img_check(path):
 
 if __name__ == '__main__':
     # load anchors
+    
     file_anchors = os.path.join(working_dir, 'models/anchors_yolov5.txt')
     with open(file_anchors, 'r') as f:
         values = [float(_v) for _v in f.readlines()]
         anchors = np.array(values).reshape(3,-1,2).tolist()
     print("use anchors from '{}', which is {}".format(file_anchors, anchors))
 
+    #anchors = [
+    #    [10, 13, 16, 30, 33, 23], # P3/8
+    #    [30, 61, 62, 45, 59, 119], # P4/16
+    #    [116, 90, 156, 198, 373, 326] # P5/32
+    #]
+    
     # list images
     img_folder = os.path.join(working_dir, '__img')
     file_list = sorted(os.listdir(img_folder))
@@ -198,12 +208,13 @@ if __name__ == '__main__':
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # preprocee if not rknn model
+        #input_data = img
         input_data = img.transpose((2,0,1))
         input_data = input_data.reshape(1,*input_data.shape).astype(np.float32)
         input_data = input_data/255.
 
         # загружаем .pt полученных ранее слоёв (см. папку 'yolov5')
-        output_names = [ 'data_0.pt', 'data_1.pt', 'data_2.pt' ]
+        output_names = [ 'data_2.pt', 'data_1.pt', 'data_0.pt' ]
         outputs = []
         for name in output_names:
             try:

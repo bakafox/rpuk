@@ -12,6 +12,9 @@
 
 rm -rf __out
 rm -rf __postprocess
+rm data_0.pt
+rm data_1.pt
+rm data_2.pt
 
 read -p "KAMEPY BKJIO4AEM? [Y/N]: " yn
 if [[ $yn =~ ^[Yy]$ ]]; then

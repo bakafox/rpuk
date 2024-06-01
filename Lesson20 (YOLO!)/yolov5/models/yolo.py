@@ -93,14 +93,14 @@ class Detect(nn.Module):
         """Processes input through YOLOv5 layers, altering shape for detection: `x(bs, 3, ny, nx, 85)`."""
         z = []  # inference output
 
-        for i in range(self.nl -1):
+        for i in range(self.nl):
         #for i in range(2, self.nl): # <--- "вычёркиваем" из обработки первые два слоя,
                                     # ответственные за "поиск" мелкиъ объектов на картинке.
                                     # Если аналогигчно вычеркнуть послений слой (см. выше),
                                     # мы не будет "искать" крупные объекты на картинке.
 
             x[i] = self.m[i](x[i])  # conv
-            torch.save(x[i], "data_" + str(i) + ".pt") # <--- сохраняем для обработки в RKNN
+            torch.save(x[i], "data_" + str(i) + ".pt") # <--- послойно сохраняем для обработки в RKNN
 
             bs, _, ny, nx = x[i].shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
@@ -122,6 +122,7 @@ class Detect(nn.Module):
                     #print(xy, wh, conf)
                 z.append(y.view(bs, self.na * nx * ny, self.no))
 
+        #torch.save(x, "data.pt") # <--- тест использования всех слоёв
         return x if self.training else (torch.cat(z, 1),) if self.export else (torch.cat(z, 1), x)
 
     def _make_grid(self, nx=20, ny=20, i=0, torch_1_10=check_version(torch.__version__, "1.10.0")):

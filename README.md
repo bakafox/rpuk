@@ -1,7 +1,7 @@
 # rpuk
 `git clone https://github.com/vvabi-sabi/PAC.git`
 
-## План занятий на семестр:
+## План занятий на 3 семестр:
 1. pEp8
 2. func
 3. class

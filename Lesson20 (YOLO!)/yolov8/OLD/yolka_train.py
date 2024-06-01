@@ -9,7 +9,8 @@ import os
 
 
 # скачиваем датасет с RoboFlow
-rf = Roboflow(api_key='IJmZ9Rj7mXzHlNQHLSSX')
+rf = Roboflow(api_key='IJmZ9Rj7mXzHlNQHLSSX') # ключ уже месяц как разделегирован,
+                                              # можете даже не пытаться =)
 project = rf.workspace('ppe-buxwb').project('edge-academy-ppe')
 version = project.version(1)
 dataset = version.download('yolov8')
